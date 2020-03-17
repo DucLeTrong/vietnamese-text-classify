@@ -14,17 +14,17 @@ def get_data(folder_path):
             with open(os.path.join(folder_path, path, file_path), 'r', encoding="utf-16") as f:
                 lines = f.readlines()
                 lines = ' '.join(lines)
+                
 #               Tien xu li du lieu don gian
                 lines = gensim.utils.simple_preprocess(lines)
-                # print(line)
                 lines = ' '.join(lines)
+        
 #               Tách từ tiếng Việt
                 lines = ViTokenizer.tokenize(lines)
-
                 data.append(lines)
                 labels.append(path)
 
-    return data, label
+    return data, labels
 
 if __name__ == "__main__":
     folder_path = "data/"
