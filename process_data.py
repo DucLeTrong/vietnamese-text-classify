@@ -19,10 +19,10 @@ def remove_stopwords(data, stopwords):
 
 
 def preprocess_data(root_path = ''):
-    X_test = pickle.load(open(root_path + "data/x_train.pkl",'rb'))
-    y_test = pickle.load(open(root_path + "data/y_train.pkl",'rb'))
-    X_data = pickle.load(open(root_path + "data/x_test.pkl",'rb'))
-    y_data = pickle.load(open(root_path + "data/y_test.pkl",'rb'))
+    X_data = pickle.load(open(root_path + "data/x_train.pkl",'rb'))
+    y_data= pickle.load(open(root_path + "data/y_train.pkl",'rb'))
+    X_test = pickle.load(open(root_path + "data/x_test.pkl",'rb'))
+    y_test = pickle.load(open(root_path + "data/y_test.pkl",'rb'))
 
     with open(root_path + 'data/vietnamese-stopwords-dash.txt', 'r') as f:
         stopwords = set([w.strip() for w in f.readlines()])
