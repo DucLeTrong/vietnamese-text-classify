@@ -1,5 +1,6 @@
 from pyvi import ViTokenizer, ViPosTagger # thư viện NLP tiếng Việt
 from tqdm import tqdm
+import pickle
 import numpy as np
 import gensim # thư viện NLP
 import os 
@@ -15,11 +16,9 @@ def get_data(folder_path):
                 lines = f.readlines()
                 lines = ' '.join(lines)
                 
-#               Tien xu li du lieu don gian
                 lines = gensim.utils.simple_preprocess(lines)
                 lines = ' '.join(lines)
         
-#               Tách từ tiếng Việt
                 lines = ViTokenizer.tokenize(lines)
                 data.append(lines)
                 labels.append(path)
@@ -28,11 +27,10 @@ def get_data(folder_path):
 
 if __name__ == "__main__":
     folder_path = "data/"
-    X_data, y_data = get_data('data/Train_Full')
+    X_data, y_data = get_data(folder_path+'Train_Full')
     pickle.dump(X_data, open(folder_path+'x_train.pkl', 'wb'))
     pickle.dump(y_data, open(folder_path+'y_train.pkl', 'wb'))
 
-    X_test, y_test = get_data('data/Test_Full')
+    X_test, y_test = get_data(folder_path+'Test_Full')
     pickle.dump(X_test, open(folder_path+'x_test.pkl', 'wb'))
     pickle.dump(y_test, open(folder_path+'y_test.pkl', 'wb'))
-
