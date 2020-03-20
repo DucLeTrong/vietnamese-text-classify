@@ -14,11 +14,16 @@ The Vietnamese dataset consists of 10 different topics
 >> cd data/ && unrar x -r Test_Full.rar && unrar x -r Train_Full.rar
 >> python load_data.py
 ```
-- Train modelit 
+- Train model 
 ```
 >> python train.py
 ```
 ## Results
 ![png](images/accuracy.png)
+
+- Classify text
+```
+>> python infer.py --prime "Đêm hôm qua, đội tuyển Việt Nam đã có chuyến bay đến Trung Quốc"
+```
 
 
