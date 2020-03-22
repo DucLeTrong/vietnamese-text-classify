@@ -17,13 +17,19 @@ if __name__ == '__main__':
     # parser.add_argument('--input_path', type=str,
     #                     default='../classification/data/VNTC/corpus/test/')
     parser.add_argument('--prime', type=str,
-                        default="đá bóng với đá cầu nhảy dây bắn bi trốn tìm")
+                        default="aaa")
     args = parser.parse_args()
     lines = args.prime
+    lines = lines.splitlines()
+    print(lines)
     lines = ' '.join(lines)
+    print(lines)
     lines = gensim.utils.simple_preprocess(lines)
     lines = ' '.join(lines)
     lines = ViTokenizer.tokenize(lines)
+
+    with open('data/vietnamese-stopwords-dash.txt', 'r') as f:
+        stopwords = set([w.strip() for w in f.readlines()])
 
     try:
         split_words =  [x.strip('0123456789%@$.,=+-!;/()*"&^:#|\n\t\'').lower() for x in lines.split()]
@@ -31,10 +37,9 @@ if __name__ == '__main__':
         split_words =  []
     lines = ' '.join([word for word in split_words if word not in stopwords])
     x = [lines]
-        
+    print(x)
 
-    with open('data/vietnamese-stopwords-dash.txt', 'r') as f:
-        stopwords = set([w.strip() for w in f.readlines()])
+
 
 
     encoder = preprocessing.LabelEncoder()
@@ -42,6 +47,7 @@ if __name__ == '__main__':
 
     tfidf_vect = TfidfVectorizer(analyzer='word', max_features=30000)
     tfidf_vect = pickle.load(open("model/vectorizer.pickle", "rb"))
+
     tfidf_x = tfidf_vect.transform(x)
     svd = TruncatedSVD(n_components=500, random_state=1998)
 
@@ -55,4 +61,6 @@ if __name__ == '__main__':
     # load weights int|o new model
     loaded_model.load_weights("model/model.h5")
     print("Loaded model from disk")
+    print("-----------------------------------------------------------------------------------------------")
     print(encoder.inverse_transform([np.argmax(loaded_model.predict(np.array(tfidf_x_svd))[0])])[0])
+    print("-----------------------------------------------------------------------------------------------")
