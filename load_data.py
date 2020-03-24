@@ -1,9 +1,14 @@
-from pyvi import ViTokenizer, ViPosTagger # thư viện NLP tiếng Việt
+from pyvi import ViTokenizer, ViPosTagger
 from tqdm import tqdm
 import pickle
 import numpy as np
-import gensim # thư viện NLP
+import gensim 
 import os 
+import argparse
+
+
+import warnings
+warnings.filterwarnings("ignore")
 
 def get_data(folder_path):
     data = []
@@ -26,7 +31,12 @@ def get_data(folder_path):
     return data, labels
 
 if __name__ == "__main__":
-    folder_path = "data/"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data_path', type=str,
+                        default='data/')
+    args = parser.parse_args()
+    folder_path = args.data_path
+    
     X_data, y_data = get_data(folder_path+'Train_Full')
     pickle.dump(X_data, open(folder_path+'x_train.pkl', 'wb'))
     pickle.dump(y_data, open(folder_path+'y_train.pkl', 'wb'))

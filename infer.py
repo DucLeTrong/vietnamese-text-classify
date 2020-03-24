@@ -14,12 +14,16 @@ warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    # parser.add_argument('--input_path', type=str,
-    #                     default='../classification/data/VNTC/corpus/test/')
-    parser.add_argument('--prime', type=str,
+    parser.add_argument('--model_path', type=str,
+                        default='model/')
+    parser.add_argument('--data_path', type=str,
+                        default='data/')
+    parser.add_argument('--text', type=str,
                         default="aaa")
     args = parser.parse_args()
-    lines = args.prime
+    lines = args.text
+    model_path = args.model_path
+    data_path = args.data_path
     lines = lines.splitlines()
     print(lines)
     lines = ' '.join(lines)
@@ -28,7 +32,7 @@ if __name__ == '__main__':
     lines = ' '.join(lines)
     lines = ViTokenizer.tokenize(lines)
 
-    with open('data/vietnamese-stopwords-dash.txt', 'r') as f:
+    with open(data_path+'vietnamese-stopwords-dash.txt', 'r') as f:
         stopwords = set([w.strip() for w in f.readlines()])
 
     try:
@@ -39,27 +43,24 @@ if __name__ == '__main__':
     x = [lines]
     print(x)
 
-
-
-
     encoder = preprocessing.LabelEncoder()
-    encoder.classes_ = np.load('model/classes.npy')
+    encoder.classes_ = np.load(model_path+'classes.npy')
 
     tfidf_vect = TfidfVectorizer(analyzer='word', max_features=30000)
-    tfidf_vect = pickle.load(open("model/vectorizer.pickle", "rb"))
+    tfidf_vect = pickle.load(open(model_path+"vectorizer.pickle", "rb"))
 
     tfidf_x = tfidf_vect.transform(x)
     svd = TruncatedSVD(n_components=500, random_state=1998)
 
-    svd = pickle.load(open("model/selector.pickle", "rb"))
+    svd = pickle.load(open(model_path+"selector.pickle", "rb"))
     tfidf_x_svd = svd.transform(tfidf_x)
 
-    json_file = open('model/model.json', 'r')
+    json_file = open(model_path+'model.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
     # load weights int|o new model
-    loaded_model.load_weights("model/model.h5")
+    loaded_model.load_weights(model_path+"model.h5")
     print("Loaded model from disk")
     print("-----------------------------------------------------------------------------------------------")
     print(encoder.inverse_transform([np.argmax(loaded_model.predict(np.array(tfidf_x_svd))[0])])[0])
